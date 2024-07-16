@@ -1,0 +1,22 @@
+body{
+  background-color: rgb(52, 52, 52);
+  color: white;
+}
+
+.playlist-container-home-page{
+  background-color: rgba(43, 43, 43, 0.833);
+  margin: 5px;
+  padding: 5px;
+  border-radius: 8px;
+  height: auto;
+}
+
+.App{
+  text-align: center;
+  font-family: sans-serif;
+}
+
+h1{
+  font-size: 54px;
+  color: white;
+}
