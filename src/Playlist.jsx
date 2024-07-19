@@ -8,7 +8,7 @@ function Playlist(props){
             <ul>
                 {(props.songs && props.songs.map((songName, index) => 
                     <li key={index}>{songName}</li> 
-                ))|| <li>Song Names</li>}
+                ))|| 'loading...'}
             </ul>
         </div>
     )
