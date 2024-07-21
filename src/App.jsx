@@ -85,7 +85,7 @@ function App() {
                 <h1 style={{ textAlign: 'center' }}>Loading... {requestData()}</h1>
                 : <h1 style={{ textAlign: 'center' }}>
                     <button className='Sign-in-button' onClick={() => window.location = window.location.href.includes('localhost') 
-                    ? 'http://localhost:8888/login/': 'https://'}>
+                    ? 'http://localhost:8888/login/': 'https://oauth-bridge-spotify-project.vercel.app/login'}>
                         <h3>Sign in with Spotify</h3>
                     </button>
                 </h1>
