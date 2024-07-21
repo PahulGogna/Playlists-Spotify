@@ -31,7 +31,7 @@ function App() {
         for (let i = 0; i < currentPlaylist.songs.length; i++) {
             sum += (currentPlaylist.songs[i].duration);
         }
-        return sum;
+        return parseFloat(sum.toFixed(2));
     }, 0) : 0;
 
     useEffect(() => {
