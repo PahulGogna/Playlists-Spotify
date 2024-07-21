@@ -37,35 +37,36 @@ function App() {
     useEffect(() => {
         const searchParams = queryString.parse(window.location.search);
         let accessToken = searchParams.access_token;
-
-        const fetchUserData = fetch('https://api.spotify.com/v1/me', {
-            headers: {
-                Authorization: 'Bearer ' + accessToken
-            }
-        }).then(response => response.json());
-
-        const fetchUserPlaylists = fetch('https://api.spotify.com/v1/me/playlists', {
-            headers: {
-                Authorization: 'Bearer ' + accessToken
-            }
-        }).then(response => response.json());
-
-        Promise.all([fetchUserData, fetchUserPlaylists]).then(([userData, playlistsData]) => {
-            let responsePlaylists = [];
-            for (let i = 0; i < playlistsData.total; i++) {
-                responsePlaylists.push({ name: playlistsData.items[i].name, songs: [] , image: playlistsData.items[i].images ? playlistsData.items[i].images[0].url:''}); 
-                console.log(playlistsData.items[i].images)
-            }
-
-            setServerData({
-                user: {
-                    name: userData.display_name,
-                    playlists: responsePlaylists
+        if (accessToken){
+            const fetchUserData = fetch('https://api.spotify.com/v1/me', {
+                headers: {
+                    Authorization: 'Bearer ' + accessToken
                 }
+            }).then(response => response.json());
+    
+            const fetchUserPlaylists = fetch('https://api.spotify.com/v1/me/playlists', {
+                headers: {
+                    Authorization: 'Bearer ' + accessToken
+                }
+            }).then(response => response.json());
+    
+            Promise.all([fetchUserData, fetchUserPlaylists]).then(([userData, playlistsData]) => {
+                let responsePlaylists = [];
+                for (let i = 0; i < playlistsData.total; i++) {
+                    responsePlaylists.push({ name: playlistsData.items[i].name, songs: [] , image: playlistsData.items[i].images ? playlistsData.items[i].images[0].url:''}); 
+                    console.log(playlistsData.items[i].images)
+                }
+    
+                setServerData({
+                    user: {
+                        name: userData.display_name,
+                        playlists: responsePlaylists
+                    }
+                });
+            }).catch(error => {
+                console.error('Error fetching data:', error);
             });
-        }).catch(error => {
-            console.error('Error fetching data:', error);
-        });
+        }
 
     }, []);
 
@@ -80,11 +81,12 @@ function App() {
                     <Playlist name={playlist.name} songs={playlist.songs.map((value) => value.name)} image={playlist.image} key={index} />
                 )}
             </div>
-            : searchParams ?
+            : searchParams == {}?
                 <h1 style={{ textAlign: 'center' }}>Loading... {requestData()}</h1>
                 : <h1 style={{ textAlign: 'center' }}>
-                    <button className='Sign-in-button' onClick={() => window.location = 'http://localhost:8888/login/'}>
-                        <h3>Sign in to Spotify</h3>
+                    <button className='Sign-in-button' onClick={() => window.location = window.location.href.includes('localhost') 
+                    ? 'http://localhost:8888/login/': 'https://'}>
+                        <h3>Sign in with Spotify</h3>
                     </button>
                 </h1>
     );
