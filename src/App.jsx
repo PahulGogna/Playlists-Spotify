@@ -36,7 +36,9 @@ function App() {
 
     useEffect(() => {
         const searchParams = queryString.parse(window.location.search);
+        console.log(searchParams);
         let accessToken = searchParams.access_token;
+        console.log(accessToken)
         if (accessToken){
             const fetchUserData = fetch('https://api.spotify.com/v1/me', {
                 headers: {
@@ -53,8 +55,7 @@ function App() {
             Promise.all([fetchUserData, fetchUserPlaylists]).then(([userData, playlistsData]) => {
                 let responsePlaylists = [];
                 for (let i = 0; i < playlistsData.total; i++) {
-                    responsePlaylists.push({ name: playlistsData.items[i].name, songs: [] , image: playlistsData.items[i].images ? playlistsData.items[i].images[0].url:''}); 
-                    console.log(playlistsData.items[i].images)
+                    responsePlaylists.push({ name: playlistsData.items[i].name, songs: [] , image: playlistsData.items[i].images ? playlistsData.items[i].images[0].url:''});
                 }
     
                 setServerData({
