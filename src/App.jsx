@@ -91,7 +91,7 @@ function App() {
                 <TotalPlaylists total={filteredPlaylists.length} />
                 <TotalHours hours={hours} />
                 <Filter onTextChange={text => setFilterString(text.toLowerCase())} />
-                {filteredPlaylists.slice(0,3).map((playlist, index) =>
+                {filteredPlaylists.map((playlist, index) =>
                     <Playlist name={playlist.name} songs={playlist.songs.slice(0,3).map((value) => value.name)} image={playlist.image} key={index} />
                 )}
             </div>
