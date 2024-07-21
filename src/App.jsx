@@ -17,7 +17,7 @@ function App() {
     let filteredPlaylists = serverData.user && serverData.user.playlists ? serverData.user.playlists.filter(playlist => {
         let names = playlist.name.toLowerCase().includes(filterString);
         let songs = false;
-        for (let i = 0; i < playlist.songs.length; i++) {
+        for (let i = 0; i < playlist.songs.slice(0,3).length; i++) {
             if (playlist.songs[i].name.toLowerCase().includes(filterString)) {
                 songs = true;
                 break;
@@ -36,9 +36,7 @@ function App() {
 
     useEffect(() => {
         const searchParams = queryString.parse(window.location.search);
-        console.log(searchParams);
         let accessToken = searchParams.access_token;
-        console.log(accessToken)
         if (accessToken){
             const fetchUserData = fetch('https://api.spotify.com/v1/me', {
                 headers: {
@@ -49,19 +47,34 @@ function App() {
             const fetchUserPlaylists = fetch('https://api.spotify.com/v1/me/playlists', {
                 headers: {
                     Authorization: 'Bearer ' + accessToken
-                }
-            }).then(response => response.json());
+                }})
+            .then(response => response.json())
+            .then(playlistData => {
+                let PlaylistsObjs = playlistData.items.map(item => {
+                        let songs = fetch(item.tracks.href,{
+                            headers: {
+                                Authorization: 'Bearer ' + accessToken
+                            }}
+                        )
+                        return songs
+                        .then(songPromise => songPromise.json())
+                        .then(songData => {
+                            return songData.items.map((currentSong)=>{
+                                let time =  (currentSong.track.duration_ms/3600000)
+                                return {name:currentSong.track.name, duration:parseFloat(time.toFixed(2)), url:currentSong.track.external_urls.spotify}
+                            })
+                        }).then(dataArray => {
+                            return {name: item.name, songs: dataArray, image: item.images ? item.images[0].url:''}
+                        })
+                    })
+                    return Promise.all(PlaylistsObjs)
+            })
     
             Promise.all([fetchUserData, fetchUserPlaylists]).then(([userData, playlistsData]) => {
-                let responsePlaylists = [];
-                for (let i = 0; i < playlistsData.total; i++) {
-                    responsePlaylists.push({ name: playlistsData.items[i].name, songs: [] , image: playlistsData.items[i].images ? playlistsData.items[i].images[0].url:''});
-                }
-    
                 setServerData({
                     user: {
                         name: userData.display_name,
-                        playlists: responsePlaylists
+                        playlists: playlistsData
                     }
                 });
             }).catch(error => {
@@ -78,8 +91,8 @@ function App() {
                 <TotalPlaylists total={filteredPlaylists.length} />
                 <TotalHours hours={hours} />
                 <Filter onTextChange={text => setFilterString(text.toLowerCase())} />
-                {filteredPlaylists.map((playlist, index) =>
-                    <Playlist name={playlist.name} songs={playlist.songs.map((value) => value.name)} image={playlist.image} key={index} />
+                {filteredPlaylists.slice(0,3).map((playlist, index) =>
+                    <Playlist name={playlist.name} songs={playlist.songs.slice(0,3).map((value) => value.name)} image={playlist.image} key={index} />
                 )}
             </div>
             : searchParams == {}?
