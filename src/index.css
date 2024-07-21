@@ -1,14 +1,21 @@
 body{
   background-color: rgb(52, 52, 52);
   color: white;
+  -webkit-font-smoothing: antialiased;
 }
 
 .playlist-container-home-page{
   background-color: rgba(43, 43, 43, 0.833);
-  margin: 5px;
-  padding: 5px;
-  border-radius: 8px;
+  margin: 2.5%;
+  padding: 0% 0px;
+  border-radius: 8%;
   height: auto;
+}
+
+.playlist-icon{
+  width: 50%;
+  margin: 10% 0%;
+  border-radius: 50%;
 }
 
 .App{
@@ -19,4 +26,29 @@ body{
 h1{
   font-size: 54px;
   color: white;
+}
+
+.Sign-in-button{
+  padding: 20px;
+  background-color: rgba(28,215,98);
+  border-radius: 12px;
+  color: white;
+  box-shadow: 8px 5px 25px rgba(28,215,98,255);
+  border: 0px;
+  cursor:pointer;
+  transition: 100ms;
+}
+.Sign-in-button:hover{
+  background-color: rgba(28, 215, 97, 0.877);
+  border: 0px;
+  padding: 19px;
+  box-shadow: 8px 5px 20px rgba(28, 215, 97, 0.877);
+  
+}
+
+
+h3{
+  -webkit-font-smoothing: antialiased;
+  margin: 5px;
+  font-weight: bold;
 }
